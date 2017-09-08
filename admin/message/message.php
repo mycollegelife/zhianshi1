@@ -24,9 +24,7 @@
 /*列表页面的样式*/
     .messages ol{
         height: 410px;
-        /*overflow:hidden;*/
     }
-
 	.messages ol li{
 		height: 20px;
 		line-height: 20px;
@@ -91,6 +89,7 @@
 </div>
 <script type="text/javascript">
 (function(){
+    var $contain = $('#manage-container');
     var $message = $('div.messages');
    	var $ol = $('div.messages ol');
 // 获取列表
@@ -108,11 +107,25 @@
     	$ol.html($content);
 
 
+
+
+
+
+
+
+
+
         //分页
             if (Txt.length>10) {
                 $('#pagination').addClass('pagination');
 
             }
+
+
+
+
+
+
 
 
 
@@ -142,23 +155,51 @@
     				$con_detail='<p>联系人：<span>'+$one_data[0].name+'</span></p><p>电话：<span>'+$one_data[0].tel+'</span></p><p>QQ：<span>'+$one_data[0].qq+'</span></p><p>邮箱：<span>'+$one_data[0].mail+'</span></p><p>地址：<span>'+$one_data[0].address+'</span></p>';
     				$one_detail.html($con_detail);
     			// 详细页的点击按钮
-    				var $contain = $('#manage-container');
     				var $btn1 = $('#messageDetail button:nth-of-type(1)');
     				var $btn2 = $('#messageDetail button:nth-of-type(2)');
-    				$btn1.click(function(){
+                    $btn1.click(function(){
     					$contain.load('message/message.php');
-    				});
-    				$btn2.click(function(){
-    					alert('回复还没做')
-    				});
+    				});//返回按钮
+
+
+
+
+
+
+                	$btn2.click(function(){
+    					$contain.load('message/reply.php');
+
+    				});// 详细页回复按钮
     			});
+
+
+
+
+
     		});
-    	}
-        // 回复
+    	};
+
+
+
+
+
+
+        // 列表页回复
     	   $('.messages li p:nth-of-type(5) button').click(function(){
-    	   	alert('回复还没做')
+                $contain.load('message/reply.php');
     	   })
+
+
+
+
+
+
+
+
+
+
+
+
     });
 })()
-
 </script>

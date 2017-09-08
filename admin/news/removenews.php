@@ -1,13 +1,13 @@
 <?php
     header("content-type:text/html;charset=utf-8");
     //接收删除新闻的id
-    // $newsid = '201792141520';
     $newsid = isset($_POST['news_id'])?$_POST['news_id']:'';
         //连接数据库
-        require_once 'connect.php';
+        require_once '../connect.php';
         $conn = new Db();
         $conn_db = $conn->connect();
         if ($conn_db) {
+
            $removesql = "DELETE FROM news WHERE newsid =".$newsid;
            $query = mysqli_query($conn_db,$removesql);
            if($query){

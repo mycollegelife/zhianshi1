@@ -4,7 +4,7 @@
 */
   header("content-type:text/html;charset=utf-8");
   //连接数据库
-  require_once 'connect.php';
+  require_once '../connect.php';
   $conn = new Db();
   $conn_db = $conn->connect();
   if ($conn_db) {

@@ -59,6 +59,9 @@
     .article .content a.n_title:hover{
         text-decoration: underline;
     }
+    .article .content a.red1{
+        color: #38adff;
+    }
     .article .content input.check{
         width: 30px;
         height:15px;
@@ -135,7 +138,7 @@
             <div class="content">
                 <b class="display">20170809</b>
                 <input type="checkbox" class="check">
-                <a href="" class="n_title">智安仕带您看看马牌的自修复防扎防爆轮胎您看看马牌的自修复防扎防爆轮胎</a>
+                <a href="" class="n_title red1">智安仕带您看看马牌的自修复防扎防爆轮胎您看看马牌的自修复防扎防爆轮胎</a>
                 <p class="n_content">我们泰瑞克自修复防扎防爆轮胎项目从启动到现在也有半年时间了，期间接触了很多咨询的客户，兴趣都很大，这也让我们泰瑞克看到了市场前景，鼓励我们一直做下去。但还是有些客户对这行了解太少这也让我们泰瑞克看到了市场前景，鼓励我们一直做下去。但还是有些客户对这行了解太少启动到现在也有半年时间了，期间接触了</p>
                 <span>2017-7-18</span>
                 <button>删除</button>
@@ -164,7 +167,9 @@
     var $btn3 = $('ul.c_top li:nth-of-type(3)');
 
     $btn1.click(function(){
-        alert("发布新闻！")
+        var  li = $("#article div.article");
+        console.log(li )
+        // alert("发布新闻！")
     });
     $btn2.click(function(){
         $contain.load('news/news.php');
@@ -191,7 +196,7 @@ $.post("news/getnews.php",{}, function(data,state){
             $content.html(contents);
             content = $content.children().html();
 
-            article +='<div class="article"><div class="content"><b class="display">'+temp[i].newsid+'</b><input type="checkbox" class="check"><a class="n_title">'+temp[i].title+'</a><p class="n_content">'+content+'</p><span>'+temp[i].newstime+'</span><button>删除</button><button>发布</button><button>编辑</button><button>预览</button></div><div class="img"><div class="bg">+</div><img src="img/luntai.jpg" alt=""></div></div><div class="hr" id="hr"></div>';
+            article +='<div class="article"><div class="content"><b class="display">'+temp[i].newsid+'</b><input type="checkbox" class="check"><a class="n_title red'+temp[i].online+'">'+temp[i].title+'</a><p class="n_content">'+content+'</p><span>'+temp[i].newstime+'</span><button>删除</button><button>发布</button><button>编辑</button><button>预览</button></div><div class="img"><div class="bg">+</div><img src="img/luntai.jpg" alt=""></div></div><div class="hr" id="hr"></div>';
         };
         $article.html(article);
     //进入新闻详情页
@@ -218,33 +223,79 @@ $.post("news/getnews.php",{}, function(data,state){
         $n_bth3.click(function(){
             var $index = $(this).parent().find("b.display").html();
 
-            $contain.load('news/news.php',function(){
+            $contain.load('news/newsEdit.html',function(){
                 $.post('news/newsEdit.php',{newsid:$index},function(data,staus){
                     var data = eval(data);
-                    var $contain = $('#newslist');
+                    var $news_title = $("#news_title");
+                    var $news_content = $("#editor .w-e-text");
+                    var $newsid= $("#new b.display");
 
-                    var $html = '<h3>编辑新闻</h3><div id="new"><form><input id="news_title" name="news_title" type="text" placeholder="请输入标题" value="'+data[0].title+'"><div name = "news_content" id="editor">"'+data[0].content+'"</div><input id="sub" type="button" value="保存"></form></div>';
+                    $newsid.html(data[0].newsid);
+                    $news_title.val(data[0].title);
+                    $news_content.html(data[0].content);
 
-                    $contain.html($html);
-
-
-
-                    // alert($contain.html())
+                    $("#sub").click(function(){
+                        // $("#sub").attr('type','submit');
+                     //获取title和content内容
+                        var til = $.trim($("#editor .w-e-text").html());
+                        var nle = $("#news_title").val();
+                     //获取时间和得到news_id
+                         var date = new Date();
+                         var year = date.getFullYear();
+                         var month = date.getMonth()+1;
+                         var dat = date.getDate();
+                         var hours = date.getHours();
+                         var minute = date.getMinutes();
+                         var seconds = date.getSeconds();
+                         var id = year +""+ month+""+dat+""+hours+""+minute+""+seconds;
+                         var Da = year +'-'+ month+'-'+dat;
+                     //发送新闻信息
+                        if ( nle == '' && til == '<p><br></p>') {
+                            alert('请求输入新闻标题和内容！')
+                        }else if(nle == ''){
+                            alert('请求输入新闻标题！')
+                        }else if(til == '<p><br></p>'){
+                            alert('请求输入新闻内容！')
+                        }
+                        else{
+                            $.post("news/addnews.php",{
+                                 news_title:nle,
+                                 news_content : til,
+                                 news_time:Da,
+                                 news_id:id,
+                                },function(data,status){
+                                    var $news_id = $newsid.html();
+                                    $.post("news/removenews.php",{news_id:$news_id},function(data){
+                                        $contain.load('news/list.php');
+                                    });
+                            });
+                        }
+                    })
                 })
             })
         });
     //发布新闻
         $n_bth2.click(function(){
-            alert('发布新闻')
-        });
+            var $news_id = $(this).parent().find("b.display").html();
+            var $new_a = $(this).parent().find("a.n_title");
 
+            if(confirm('确定发布这条新闻吗?')){
+                $.post("news/online.php",{news_id:$news_id},function(data){
+                    $new_a.css('color','#38adff')
+                });
+            }
+        });
     //删除新闻
         $n_bth1.click(function(){
-            alert('删除新闻')
+            var $news_id = $(this).parent().find("b.display").html();
+            if(confirm('确定删除这条新闻吗?'))
+            {
+                $.post("news/removenews.php",{news_id:$news_id},function(data){
+                    $contain.load('news/list.php');
+                });
+            }
         });
-    });
-// 增加新闻
-
+});
 // 删除新闻
     // $("#delete-news").click(function () {
     //     // 循环新闻列表，找出选中的checkbox，把id传过去

@@ -1,6 +1,4 @@
 
-
-
 <?php
 // 获取列表新闻
   header("content-type:text/html;charset=utf-8");
@@ -21,7 +19,6 @@
     }
 
     $data = json_encode($arr);
-
     echo $data;
 
 

@@ -134,7 +134,7 @@
         <div class="hr"></div>
 
         <div id="article">
-        <!-- <div class="article">
+     <!--    <div class="article">
             <div class="content">
                 <b class="display">20170809</b>
                 <input type="checkbox" class="check">
@@ -166,19 +166,10 @@
     var $btn2 = $('ul.c_top li:nth-of-type(2)');
     var $btn3 = $('ul.c_top li:nth-of-type(3)');
 
-    $btn1.click(function(){
-        var  li = $("#article div.article");
-        console.log(li )
-        // alert("发布新闻！")
-    });
     $btn2.click(function(){
         $contain.load('news/news.php');
         $li.addClass('hover').siblings().removeClass('hover');//左边栏切换效果
-
-    });
-    $btn3.click(function(){
-        alert("删除新闻！")
-    });
+    });//增加新闻
 
 $.post("news/getnews.php",{}, function(data,state){
     var temp=eval(data);
@@ -275,6 +266,17 @@ $.post("news/getnews.php",{}, function(data,state){
             })
         });
     //发布新闻
+        //获取新闻id
+        var  $checked = $("#article div.article input.check");
+        var arr = [];
+        var arra = [];
+        $checked.click(function(){
+            var $index = $(this).parent().find('b.display').html();
+            var $new_a = $(this).parent().find("a.n_title");
+            arr.push($index);
+            arra.push($new_a);
+        });
+        //发布一条新闻
         $n_bth2.click(function(){
             var $news_id = $(this).parent().find("b.display").html();
             var $new_a = $(this).parent().find("a.n_title");
@@ -285,34 +287,47 @@ $.post("news/getnews.php",{}, function(data,state){
                 });
             }
         });
+        //发布多条新闻
+        $btn1.click(function(){
+            if (arr.length>0) {
+
+                if(confirm('确定发布这些新闻吗?')){
+                    for (var i = 0; i < arr.length; i++) {
+                        $.post("news/online.php",{news_id:arr[i]},function(data){
+                               for (var i = 0; i < arra.length; i++) {
+                                   arra[i].css('color','#38adff')
+                                }
+                        });
+                    }
+                }
+            }else{
+                alert("请选择新闻！")
+            }
+        });
     //删除新闻
         $n_bth1.click(function(){
             var $news_id = $(this).parent().find("b.display").html();
-            if(confirm('确定删除这条新闻吗?'))
-            {
+            if(confirm('确定删除这条新闻吗?')){
                 $.post("news/removenews.php",{news_id:$news_id},function(data){
                     $contain.load('news/list.php');
                 });
             }
         });
+        //删除多条新闻
+        $btn3.click(function(){
+            if (arr.length>0) {
+                if(confirm('确定删除这些新闻吗?')){
+                    for (var i = 0; i < arr.length; i++) {
+                        $.post("news/removenews.php",{news_id:arr[i]},function(data){
+                            $contain.load('news/list.php');
+                        });
+                    }
+                }
+            }else{
+                alert("请选择新闻！")
+            }
+        });
 });
-// 删除新闻
-    // $("#delete-news").click(function () {
-    //     // 循环新闻列表，找出选中的checkbox，把id传过去
-    //     var newsNum=$("input");
 
-    //     for (var i = 0; i < $(".article").length; i++) {
-
-    //         if (newsNum[i].checked) {
-    //             var newid=$(".newsid")[i].innerHTML;
-    //             console.log($(".newsid")[i].innerHTML);
-    //         }
-    //     }
-    //     // $.post("removenews.php",{news_id:201792141338
-
-    //     // },function () {
-    //     //     alert(1)
-    //     // })
-    // })
 })();
 </script>

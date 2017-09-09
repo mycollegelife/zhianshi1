@@ -49,6 +49,28 @@
     b.display{
         display: none;
     }/*匹配id*/
+    #alertdiv{
+        width: 440px;
+        height: 140px;
+        border: 1px solid #EAEAEA;
+        background: #FDFDFD;
+        border-radius: 5px;
+        box-shadow: 0px 0px 2px #EAEAEA;
+        position: absolute;
+        top: -200px;
+        left: 50%;
+        margin-left: -220px;
+        padding: 10px 20px;
+        transition: all 0.5s;
+        /*display: none;*/
+    }
+    #alertdiv nav{
+        font-size: 18px;
+    }
+    #alertdiv p{
+       font-size: 12px;
+       margin-top: 10px;
+    }/*弹出框*/
 
 /*````````````````````````主页面·······························*/
     #manage-nav{
@@ -174,7 +196,14 @@
     </div>
     <div id="manage-container">
     </div>
+
 <script>
+// 公共js
+    function alertdiv(data){
+         var $alertdiv = $("#alertdiv");
+         $alertdiv.find("p").html(data);
+         $alertdiv.css({"top":"100px"});
+    };
 (function(){
     // ajax 的load方法加载页面
         var $contain = $('#manage-container');

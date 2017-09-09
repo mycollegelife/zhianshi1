@@ -9,6 +9,10 @@
         <input id="sub" type="button" value="保存">
     </form>
 </div>
+<div id="alertdiv">
+    <nav>温馨提示：</nav>
+    <p></p>
+</div>
     <!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
     <script type="text/javascript" src="wangEditor.min.js"></script>
     <script type="text/javascript">
@@ -41,15 +45,20 @@
                 alert('请求输入新闻内容！')
             }
             else{
-                $("#sub").attr('type','submit');
+                // $("#sub").attr('type','submit');
                 $.post("news/addnews.php",{
                     news_title:nle,
                     news_content : til,
                     news_time:Da,
                     news_id:id,
                    },function(data,status){
-                        alert(data);
+                        alertdiv(data);
+                        $("#sub").attr("disabled","disabled");
+                        setTimeout(function(){
+                            $('#manage-container').load('news/list.php');
+                            $('#nav li:nth-of-type(3)').addClass('hover').siblings().removeClass('hover');//左边栏切换效果
+                        },2000)
                 });
             }
-       })
+       });
     </script>
